@@ -1,4 +1,4 @@
-# googlesheets-telegram-integration
+# googlesheets-telegram-notification
 App script for integration google sheets and telegram api
 
 1. This script need to copy into your google sheet(open sheet -> Extensions -> Apps Script)
