@@ -10,7 +10,10 @@ function onEditInstall(event) {
 
   // Getting data from a sheet with tasks
   const data = SpreadsheetApp.openById(TABLE_ID).getSheetByName(LIST_NAME).getDataRange().getValues(); 
-
+ 
+  // Getting values from the directory
+  const sprTlg = SpreadsheetApp.openById(TABLE_ID).getSheetByName(SPR_NAME).getDataRange().getValues();
+  
   // Get the address of the cell to change
   let range = event.range;
   let changeCol = event.range.getColumn();
@@ -19,12 +22,18 @@ function onEditInstall(event) {
   // Notification only after certain column is filled
   if (triggerCol.includes(changeCol)) {
 
+    // Add dict in map for best search
+    let dictMap = new Map();
+    for (i = 3; i < 32; i++) {
+      dictMap.set(sprTlg[i][3], sprTlg[i][2]);
+    }
+
     // Text msg for bot telegramm
-    const text = "Application assigned: " + data[changeRow][0] +" "+ data[changeRow][1] +
-    "\nPriority: " + data[changeRow][2] + 
-    "\nexecutor: " + data[changeRow][3] + "\n"
-    + getTlgByName(data[changeRow][3]);
-  
+    const text = "Application assigned: " + data[changeRow][0] +" "+ data[changeRow][1]
+    + "\nPriority: " + data[changeRow][2]
+    + "\nexecutor: " + data[changeRow][3] + "\n"
+    + dictMap.get(data[changeRow][3]);
+
     // Check if the line is completely filled
     if(data[changeRow][0] != "" & data[changeRow][1] != "" & data[changeRow][2] != "" & data[changeRow][3] != "" & data[changeRow][4] != "")  {
       const msg = sendMessage({ chat_id: CHAT_ID, text});
@@ -33,26 +42,8 @@ function onEditInstall(event) {
     }
 
   } else {
-    console.log("Table changes do not require notification");
+    console.log("Table changes do not require notification: " + triggerCol);
   }
-}
- 
-// The function of receiving telegrams from the directory
-function getTlgByName(name) {
-
-  // Getting values from the directory
-  const sprTlg = SpreadsheetApp.openById(TABLE_ID).getSheetByName(SPR_NAME).getDataRange().getValues();
-
-  // Looking for values in the directory
-  let i = 3;
-  while (i <= 32){
-    if(sprTlg[i][3] == name){
-      return sprTlg[i][2];
-    } else { 
-      i++
-    }
-  }
-  return "Telegram not found"
 }
 
 function api(METHOD_NAME) {
