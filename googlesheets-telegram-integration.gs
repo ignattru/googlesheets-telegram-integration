@@ -2,30 +2,32 @@ const API_KEY = 'api key telegramm bot';
 const CHAT_ID = 'id chat with bot'; 
 const TABLE_ID = 'id google sheet';
 const LIST_NAME = 'name google sheet';
+const SPR_NAME = 'dict name';
+const triggerCol = [4,5]; 
 
+// Document edit trigger
 function onEditInstall(event) {
-  let range = event.range;
+
+  // Getting data from a sheet with tasks
   const data = SpreadsheetApp.openById(TABLE_ID).getSheetByName(LIST_NAME).getDataRange().getValues(); 
-  let sh = SpreadsheetApp.getActiveSheet();
-  let col = event.range.getColumn();
 
-  // Find the last nonempty row in first col
-  let C = sh.getRange('A1:A' + sh.getMaxRows()).getDisplayValues();
-  for (let i = sh.getMaxRows()-1; i >= 0; i--) {
-    let cc = C[i][0];
-    if (C[i] != '') {var LastRow = i+1; i=0}
-  }
-  lr = LastRow - 1;
+  // Get the address of the cell to change
+  let range = event.range;
+  let changeCol = event.range.getColumn();
+  let changeRow = event.range.getRow() - 1;
 
-  // Text msg for bot telegramm
-  const text = "Application assigned: " + data[lr][0] +" "+ data[lr][1] + "\nPriority: " + data[lr][2] + "\nExecutor: " + data[lr][3];
- 
   // Notification only after certain column is filled
-  if (col == 5) {
-    
+  if (triggerCol.includes(changeCol)) {
+
+    // Text msg for bot telegramm
+    const text = "Application assigned: " + data[changeRow][0] +" "+ data[changeRow][1] +
+    "\nPriority: " + data[changeRow][2] + 
+    "\nexecutor: " + data[changeRow][3] + "\n"
+    + getTlgByName(data[changeRow][3]);
+  
     // Check if the line is completely filled
-    if(data[lr][0] != "" & data[lr][1] != "" & data[lr][2] != "" & data[lr][3] != "" & data[lr][4] != "")  {
-      const res = sendMessage({ chat_id: CHAT_ID, text});
+    if(data[changeRow][0] != "" & data[changeRow][1] != "" & data[changeRow][2] != "" & data[changeRow][3] != "" & data[changeRow][4] != "")  {
+      const msg = sendMessage({ chat_id: CHAT_ID, text});
     } else {
       console.log("Line is not filled");
     }
@@ -33,6 +35,24 @@ function onEditInstall(event) {
   } else {
     console.log("Table changes do not require notification");
   }
+}
+ 
+// The function of receiving telegrams from the directory
+function getTlgByName(name) {
+
+  // Getting values from the directory
+  const sprTlg = SpreadsheetApp.openById(TABLE_ID).getSheetByName(SPR_NAME).getDataRange().getValues();
+
+  // Looking for values in the directory
+  let i = 3;
+  while (i <= 32){
+    if(sprTlg[i][3] == name){
+      return sprTlg[i][2];
+    } else { 
+      i++
+    }
+  }
+  return "Telegram not found"
 }
 
 function api(METHOD_NAME) {
