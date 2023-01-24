@@ -8,12 +8,6 @@ const triggerCol = [4,5];
 // Document edit trigger
 function onEditInstall(event) {
 
-  // Getting data from a sheet with tasks
-  const data = SpreadsheetApp.openById(TABLE_ID).getSheetByName(LIST_NAME).getDataRange().getValues(); 
- 
-  // Getting values from the directory
-  const sprTlg = SpreadsheetApp.openById(TABLE_ID).getSheetByName(SPR_NAME).getDataRange().getValues();
-  
   // Get the address of the cell to change
   let range = event.range;
   let changeCol = event.range.getColumn();
@@ -21,6 +15,12 @@ function onEditInstall(event) {
 
   // Notification only after certain column is filled
   if (triggerCol.includes(changeCol)) {
+    
+    // Getting data from a sheet with tasks
+    const data = SpreadsheetApp.openById(TABLE_ID).getSheetByName(LIST_NAME).getDataRange().getValues(); 
+ 
+    // Getting values from the directory
+    const sprTlg = SpreadsheetApp.openById(TABLE_ID).getSheetByName(SPR_NAME).getDataRange().getValues();
 
     // Add dict in map for best search
     let dictMap = new Map();
