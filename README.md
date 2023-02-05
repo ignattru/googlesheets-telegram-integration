@@ -7,9 +7,11 @@ App script for integration google sheets and telegram api. Functions for google 
 
 There are two tables for example:
 Tasks: a list of tasks for performers 
+
 ![image](https://user-images.githubusercontent.com/59527408/216812897-e0f78326-08f6-47bd-9ca6-8cc6826b5e9e.png)
 
 Dict: list of performers
+
 ![image](https://user-images.githubusercontent.com/59527408/216812933-27ab67c3-e24a-4437-ae98-720227a35fcc.png)
 
 Obtaining the chat identifier with the bot:
@@ -25,6 +27,7 @@ const SPR_NAME = 'Dict'; (name of the sheet with the list of performers)
 const triggerCol = [4,5]; (columns that trigger notification when they change)
 
 Example notice:
+
 ![image](https://user-images.githubusercontent.com/59527408/216813321-c524c6ee-af04-4bb1-9119-b6227c669713.png)
 
 Notifications are sent if:
