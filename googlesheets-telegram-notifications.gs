@@ -5,7 +5,7 @@ const LIST_NAME = 'name google sheet';
 const SPR_NAME = 'dict name';
 const triggerCol = [4,5]; 
 
-/ Document edit trigger
+// Document edit trigger
 function onEditInstall(event) {
 
   // Run script only if sheet "LIST_NAME" been change
@@ -60,12 +60,10 @@ function isLineFilled(data, changeRow) {
    return false;
    }
 }
-
  
 function api(METHOD_NAME) {
   return `https://api.telegram.org/bot${API_KEY}/` + METHOD_NAME
 }
-
  
 function sendMessage(params) {
   const uf = UrlFetchApp.fetch(api('sendMessage') + '?' + serialize(params), {
@@ -73,7 +71,6 @@ function sendMessage(params) {
   });
   return uf;
 }
-
  
 function serialize(obj) {
   var str = [];
